@@ -9,9 +9,11 @@ class Artist(models.Model):
 class Album(models.Model):
      title = models.CharField(max_length=225)
      released_date = models.DateField()
+     cover_img = models.ImageField(upload_to='album_covers/')
      artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
      
 class Song(models.Model):
      title = models.CharField(max_length=100)
      duration = models.DurationField()
-     album = models.ForeignKey(Album, on_delete=models.CASCADE)         
+     album = models.ForeignKey(Album, on_delete=models.CASCADE)  
+     song_img = models.ImageField(upload_to='songs_images/')       
