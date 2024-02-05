@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
+from .models import Artist
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.http import HttpResponse
 
 # Create your views here.
@@ -34,30 +35,22 @@ def profile(request):
 
 
 def signup(request):
-     if request.method == "POST":
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        password1 = request.POST.get('password1')
-        password2 = request.POST.get('password2')
+    if request.method == "POST":
+        username = request.POST['username']
+        email = request.POST['email']
+        password1 = request.POST['password1']
+        password2 = request.POST['password2']
 
         if password1 == password2:  # Check if passwords match
-            # Check if the username is unique
-            if not User.objects.filter(username=username).exists():
-                # Check if the email is unique
-                if not User.objects.filter(email=email).exists():
-                    # Create and save the user
-                    user = User.objects.create_user(username=username, email=email, password=password1)
-
-                    # Log in the user
-                    login(request, user)
-                    return redirect('login')  # Replace 'login' with the actual URL name or path for your login page
-                else:
-                    error_message = "Email is already registered."
-            else:
-                error_message = "Username is already taken."
+             print('password same')
+             
         else:
-            error_message = "Passwords do not match."
+             messages.info(request, "password not matching")
+             return redirect('singup')   
 
-        return render(request, 'signup.html', {'error_message': error_message})
+    else:
+        return render(request, "signup.html")
 
-     return render(request, 'signup.html')                    
+
+def logout(request):
+    pass
