@@ -1,39 +1,27 @@
 from django.contrib.auth import authenticate, login, logout
-from .models import Artist
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth.models import User, auth
-from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
-# Create your views here.
-
-
+@login_required(login_url='login')
 def index(request):
     return render(request, "index.html")
 
-
-def login(request):
-    if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("passowrd")
-
-        # Authenticate the user
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
-
         if user is not None:
-            # User is authenticated, log them in
             login(request, user)
-            return redirect("index")
-
+            return redirect('index')
         else:
-            return render(request, "login.html", {"error": "Invlid credantials"})
-
+            messages.error(request, 'Invalid username or password.')
     return render(request, "login.html")
-
 
 def profile(request):
     return render(request, "profile.html")
-
 
 def signup(request):
     if request.method == "POST":
@@ -44,28 +32,24 @@ def signup(request):
 
         if password == password2:  # Check if passwords match
             if User.objects.filter(email=email).exists():
-                messages.info(request, "Email already taken")
+                messages.error(request, "Email already taken.")
                 return redirect("signup")
             elif User.objects.filter(username=username).exists():
-                messages.info(request, "username already taken")
+                messages.error(request, "Username already taken.")
                 return redirect("signup")
             else:
                 user = User.objects.create_user(
                     username=username, email=email, password=password
                 )
-                user.save()
-
-                user_login = auth.authenticate(username=username, password=password)
-                auth.login(request, user_login)
+                login(request, user)
                 return redirect("/")
-
         else:
-            messages.info(request, "password not matching")
+            messages.error(request, "Passwords do not match.")
             return redirect("signup")
 
-    else:
-        return render(request, "signup.html")
+    return render(request, "signup.html")
 
-
-def logout(request):
-    pass
+@login_required(login_url='login')
+def logout_view(request):
+    logout(request)
+    return redirect('login')
