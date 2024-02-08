@@ -26,7 +26,7 @@ def top_artists():
             artist_id = artist.get("id", "No ID")
             artists_info.append((name, avatar_url, artist_id))
             
-            return artists_info   
+        return artists_info   
 
 
 @login_required(login_url="login")
