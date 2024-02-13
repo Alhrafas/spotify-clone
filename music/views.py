@@ -1,21 +1,54 @@
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Artist
+from .models import Artist, Song
 from django.contrib.auth.models import User
 from django.db.models import Count
 
 
 def get_top_artists():
     # Retrieve the top artists based on the number of albums they have
-    top_artists = Artist.objects.annotate(num_albums=Count('album')).order_by('-num_albums')[:10]
+    top_artists = Artist.objects.annotate(num_albums=Count("album")).order_by(
+        "-num_albums"
+    )[:10]
     return top_artists
+
+
+def get_top_songs():
+    # Retrieve the top songs based on the number of times they've been played
+    top_songs = Song.objects.annotate(num_plays=Count("plays")).order_by("-num_plays")[
+        :18
+    ]
+    return top_songs
+
+def play_song(request, song_id):
+    # Retrieve the song object from the database
+    song = get_object_or_404(Song, pk=song_id)
+
+    # Additional logic for playing the song can be added here
+
+    # Pass the song object to the template
+    return render(request, 'music.html', {'song': song})
 
 @login_required(login_url="login")
 def index(request):
     top_artists = get_top_artists()
-    return render(request, "index.html", {'top_artists': top_artists})
+    top_songs = get_top_songs()
+
+    #     dividing the list into three part
+    firt_six_sogns = top_songs[0:6]
+    second_six_songs = top_songs[6:12]
+    third_six_songs = top_songs[12:18]
+    
+    context = {
+         'top_artists': top_artists,
+         'first_six_songs': firt_six_sogns,
+         'second_six_songs': second_six_songs,
+         'third_six_songs': third_six_songs,
+    }
+    return render(request, "index.html", context)
 
 
 def login_view(request):
