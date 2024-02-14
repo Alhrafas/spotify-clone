@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Artist, Song
+from .models import Artist, Song, Album
 from django.contrib.auth.models import User
 from django.db.models import Count
 
@@ -64,8 +64,11 @@ def login_view(request):
     return render(request, "login.html")
 
 
-def profile(request):
-    return render(request, "profile.html")
+def profile(request, artist_id):
+     artist = get_object_or_404(Artist, pk=artist_id)
+     albums = Album.objects.filter(artist=artist)
+     songs = Song.objects.filter(album__in=albums)
+     return render(request, "profile.html", {'artist': artist, 'songs': songs})
 
 
 def signup(request):

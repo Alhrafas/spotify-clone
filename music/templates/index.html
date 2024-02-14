@@ -80,7 +80,7 @@
                 
                 {% for artist in top_artists %}
                 <div class="artist-card">
-                   <a href="/profile">
+                   <a href="{% url 'profile' artist.id %}">
                     <img src="{{ artist.image.url }}" alt="{{ artist.name }}" style="width:150px; height:150px; border-radius:50%;">
                     <div class="artist-info">
                         <div class="artist-name">{{ artist.name }}</div>
