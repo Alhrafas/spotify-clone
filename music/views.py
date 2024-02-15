@@ -23,6 +23,7 @@ def get_top_songs():
     ]
     return top_songs
 
+
 def play_song(request, song_id):
     # Retrieve the song object from the database
     song = get_object_or_404(Song, pk=song_id)
@@ -31,7 +32,8 @@ def play_song(request, song_id):
     # Additional logic for playing the song can be added here
 
     # Pass the song object to the template
-    return render(request, 'music.html', {'song': song, 'artist': artist})
+    return render(request, "music.html", {"song": song, "artist": artist})
+
 
 @login_required(login_url="login")
 def index(request):
@@ -42,12 +44,12 @@ def index(request):
     firt_six_sogns = top_songs[0:6]
     second_six_songs = top_songs[6:12]
     third_six_songs = top_songs[12:18]
-    
+
     context = {
-         'top_artists': top_artists,
-         'first_six_songs': firt_six_sogns,
-         'second_six_songs': second_six_songs,
-         'third_six_songs': third_six_songs,
+        "top_artists": top_artists,
+        "first_six_songs": firt_six_sogns,
+        "second_six_songs": second_six_songs,
+        "third_six_songs": third_six_songs,
     }
     return render(request, "index.html", context)
 
@@ -66,10 +68,10 @@ def login_view(request):
 
 
 def profile(request, artist_id):
-     artist = get_object_or_404(Artist, pk=artist_id)
-     albums = Album.objects.filter(artist=artist)
-     songs = Song.objects.filter(album__in=albums)
-     return render(request, "profile.html", {'artist': artist, 'songs': songs})
+    artist = get_object_or_404(Artist, pk=artist_id)
+    albums = Album.objects.filter(artist=artist).order_by("release_date")
+    songs = Song.objects.filter(album__in=albums)
+    return render(request, "profile.html", {"artist": artist, "songs": songs, 'albums': albums})
 
 
 def signup(request):

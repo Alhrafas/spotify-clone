@@ -71,7 +71,11 @@
     <!-- Artist Header -->
     <div class="relative">
       <!-- Increased height with inline style -->
-      <img src="{{ artist.image.url }}" alt="{{artist.name}}" style="height: 600px; object-fit: cover; width: 100%;">
+      
+      {% if albums %}
+      <img src="{{ album.cover_image.url }}" alt="{{artist.name}}" style="height: 600px; object-fit: cover; width: 100%;">
+      {% endif %}
+        
       <div class="absolute bottom-0 p-5 w-full" style="background: rgba(0, 0, 0, 0.5);">
         <div class="flex items-center">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500" viewBox="0 0 24 24" fill="currentColor">
