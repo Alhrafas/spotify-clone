@@ -8,4 +8,5 @@ urlpatterns = [
     path('profile/<int:artist_id>/', views.profile, name='profile'),
     path('signup/', views.signup, name='signup'),
     path('logout/', views.logout_view, name='logout'),
+    path('search/', views.search, name='search')
 ]

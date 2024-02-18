@@ -54,6 +54,15 @@ def index(request):
     return render(request, "index.html", context)
 
 
+def search(request):
+    if request.method == 'POST':
+        search_query = request.POST.get('search_query', '')
+        # Perform the search
+        results = Song.objects.filter(title__icontains=search_query)
+        return render(request, 'search.html', {'results': results, 'search_query': search_query})
+    else:
+        return render(request, 'search.html')
+
 def login_view(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -71,7 +80,9 @@ def profile(request, artist_id):
     artist = get_object_or_404(Artist, pk=artist_id)
     albums = Album.objects.filter(artist=artist).order_by("release_date")
     songs = Song.objects.filter(album__in=albums)
-    return render(request, "profile.html", {"artist": artist, "songs": songs, 'albums': albums})
+    return render(
+        request, "profile.html", {"artist": artist, "songs": songs, "albums": albums}
+    )
 
 
 def signup(request):

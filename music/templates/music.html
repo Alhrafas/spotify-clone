@@ -17,7 +17,7 @@
 
         <!-- Top section of the sidebar -->
         <div class="sidebar-section">
-            <a href="#" class="sidebar-link active">
+            <a href="{% url 'index' %}" class="sidebar-link active">
                 <span class="sidebar-link-icon">🏠</span>
                 Home
             </a>
@@ -53,6 +53,7 @@
     <!-- Main content area where we will add the music player -->
     <div class="music-player" style="margin-left:240px; padding:20px; display: flex; justify-content: center; align-items: center; height: calc(100vh - 90px);">
         <!-- Music Player Interface -->
+        
         <div class="player-container">
             <img class="album-cover" src="{{song.image.url}}" alt="Album Cover">
             <div class="song-info">
