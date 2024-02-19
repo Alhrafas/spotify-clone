@@ -57,11 +57,18 @@ def index(request):
 def search(request):
     if request.method == 'POST':
         search_query = request.POST.get('search_query', '')
-        # Perform the search
-        results = Song.objects.filter(title__icontains=search_query)
-        return render(request, 'search.html', {'results': results, 'search_query': search_query})
+
+        # Perform the search for artists and songs
+        artists = Artist.objects.filter(name__icontains=search_query)
+        songs = Song.objects.filter(title__icontains=search_query)
+
+        # Collect all related songs
+        related_songs = Song.objects.filter(album__artist__in=artists) | songs
+
+        return render(request, 'search.html', {'artists': artists, 'related_songs': related_songs, 'search_query': search_query})
     else:
         return render(request, 'search.html')
+
 
 def login_view(request):
     if request.method == "POST":

@@ -87,34 +87,48 @@
     <!-- Popular Tracks Section -->
     <div class="p-5">
       <br>
-      <h2 class="text-2xl font-bold mb-4">Search Results</h2>
+      <h2 class="text-2xl font-bold mb-4">Search Results ({{results|length}}) founds</h2>
       <div class="divide-y divide-gray-800">
-        <!-- Single Track Row -->
-        {% if results %}
-        <!-- Display search results if there are any -->
-        {% for song in results %}
-          <div class="flex justify-between items-center py-3">
-            <div class="flex items-center space-x-4">
-              <img src="{{ song.image.url }}" alt="{{ song.title }}" class="w-12 h-12">
-              <div>
-                <a href="{% url 'play_song' song.id %}">
-                  <p class="text-base font-medium">{{ song.title }}</p>
-                  <p class="text-xs text-gray-400">{{ song.artist.name }}</p>
-                </a>
-              </div>
-            </div>
-            <div class="text-gray-400">{{ song.plays }}</div>
-            <div class="text-gray-400">{{ song.duration }}</div>
-          </div>
-        {% endfor %}
-      {% else %}
-        <!-- Display a message if there are no search results -->
-        <p>No results found for '{{ search_query }}'.</p>
-      {% endif %}
-          
+          <!-- Display search results for artists -->
+          {% if artists %}
+              {% for artist in artists %}
+                  <div class="flex justify-between items-center py-3">
+                      <div>
+                          <h3 class="text-xl font-semibold">{{ artist.name }}</h3>
+                          <!-- Display related songs for the current artist -->
+                          <ul>
+                              {% for song in related_songs %}
+                                  {% if song.album.artist == artist %}
+                                      <li>
+                                          <a href="{% url 'play_song' song.id %}" class="text-base font-medium">{{ song.title }}</a>
+                                          <p class="text-xs text-gray-400">{{ song.artist.name }}</p>
+                                      </li>
+                                  {% endif %}
+                              {% endfor %}
+                          </ul>
+                      </div>
+                  </div>
+              {% endfor %}
+          {% endif %}
+          <!-- Display search results for songs -->
+          {% if songs %}
+              <h3 class="text-xl font-semibold">Songs</h3>
+              <ul>
+                  {% for song in songs %}
+                      <li>
+                          <a href="{% url 'play_song' song.id %}" class="text-base font-medium">{{ song.title }}</a>
+                          <p class="text-xs text-gray-400">{{ song.artist.name }}</p>
+                      </li>
+                  {% endfor %}
+              </ul>
+          {% endif %}
+          <!-- Display a message if there are no search results -->
+          {% if not artists and not songs %}
+              <p>No results found for '{{ search_query }}'.</p>
+          {% endif %}
       </div>
-      <!-- <a href="#" class="text-green-500 text-sm">See more</a> -->
-    </div>
+  </div>
+  
     
   </div>
 
