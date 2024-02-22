@@ -29,9 +29,6 @@ def play_song(request, song_id):
     song = get_object_or_404(Song, pk=song_id)
     artist = song.album.artist
 
-    # Additional logic for playing the song can be added here
-
-    # Pass the song object to the template
     return render(request, "music.html", {"song": song, "artist": artist})
 
 
