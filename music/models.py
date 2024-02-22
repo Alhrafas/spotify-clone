@@ -33,7 +33,7 @@ class Song(models.Model):
     lyrics = models.TextField(blank=True)
     image = models.ImageField(upload_to='song_images/', blank=True)
     audio_file = models.FileField(upload_to='audio_files/')
-    plays = models.IntegerField(default=0)  # New field for tracking number of plays
+    plays = models.IntegerField(default=0)  
     
     def __str__(self):
          return self.title
